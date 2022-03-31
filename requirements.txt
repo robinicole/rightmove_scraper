@@ -1,0 +1,5 @@
+tqdm
+pandas
+bs4
+pymongo
+requests
