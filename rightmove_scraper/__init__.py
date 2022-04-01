@@ -3,7 +3,7 @@ from tqdm.auto import tqdm
 
 from rightmove_scraper.db import FlatStore
 from rightmove_scraper.search_page_scraper import get_flats_html_and_parse
-from .constants import ISLINGTON_BOROUGH, CAMDEN_BOROUGH, BERM_BOROUGH
+from rightmove_scraper.constants import ISLINGTON_BOROUGH, CAMDEN_BOROUGH, BERM_BOROUGH
 
 
 def generate_df(borough: str, radius: str, flat_store=None, mongo_client=None) -> pd.DataFrame:

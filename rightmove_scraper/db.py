@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from rightmove_scraper.flat_desc_scraper import link_to_id, extract_additional_info
 from rightmove_scraper.helpers import get_and_parse
-
+from datetime import datetime
 
 class FlatStore:
     """
@@ -15,6 +15,7 @@ class FlatStore:
     def force_update(self, link) -> dict:
         page = extract_additional_info(get_and_parse(link))
         page['id'] = link_to_id(link)
+        page['date'] = datetime.now()
         self.coll.delete_one({"id": page['id']})
         self.coll.insert_one(page)
         return page

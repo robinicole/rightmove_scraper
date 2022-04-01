@@ -1,3 +1,4 @@
+import requests
 from bs4 import BeautifulSoup
 from typing import List
 import pandas as pd
@@ -7,6 +8,9 @@ from .helpers import find_and_strip, get_and_parse, get_url
 
 
 def sarch_page_parse_flat_html(apartment_no: BeautifulSoup) -> dict:
+    """
+    Proces a flat card and extract data
+    """
     apartment_info = apartment_no.find("a", class_="propertyCard-link")
     return dict(
         apartment_info=apartment_info,
@@ -22,6 +26,9 @@ def sarch_page_parse_flat_html(apartment_no: BeautifulSoup) -> dict:
 
 
 def sarch_page_get_flat_html(borough: str, radius: str) -> List[BeautifulSoup]:
+    """
+    Extract all the flat cards in the search page into a list
+    """
     flats_list = []
     index = 0
     while True:
@@ -33,7 +40,10 @@ def sarch_page_get_flat_html(borough: str, radius: str) -> List[BeautifulSoup]:
             rightmove = f"https://www.rightmove.co.uk/property-for-sale/find.html?locationIdentifier=REGION%{borough}&sortType=6&index={index}&propertyTypes=&includeSSTC=false&mustHave=&dontShow=&maxDaysSinceAdded=14&furnishTypes=&keywords=&radius={radius}"
 
         # request our webpage
-        soup = get_and_parse(rightmove, headers=HEADERS)
+        try:
+            soup = get_and_parse(rightmove, headers=HEADERS)
+        except requests.HTTPError:
+            break
         apartments = soup.find_all("div", class_="l-searchResult is-list")
         number_of_listings = soup.find(
             "span", {"class": "searchHeader-resultCount"}

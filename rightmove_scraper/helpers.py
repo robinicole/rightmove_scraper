@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+from rightmove_scraper.constants import BASE_URL
+from typing import Optional
 
 
 def get_and_parse(*args, **kwargs) -> BeautifulSoup:
@@ -8,12 +10,12 @@ def get_and_parse(*args, **kwargs) -> BeautifulSoup:
     return BeautifulSoup(res.text, "html.parser")
 
 
-def find_and_strip(inp: BeautifulSoup, kind: str, class_: str) -> str:
+def find_and_strip(inp: BeautifulSoup, kind: str, class_: str) -> Optional[str]:
     try:
         return inp.find(kind, class_=class_).get_text().strip()
-    except:
-        return None
+    except AttributeError:
+        return
 
 
 def get_url(appar_no: BeautifulSoup) -> str:
-    return 'https://www.rightmove.co.uk' + appar_no.find('a', class_='propertyCard-link')['href']
+    return BASE_URL + appar_no.find('a', class_='propertyCard-link')['href']
